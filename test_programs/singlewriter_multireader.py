@@ -18,8 +18,7 @@
 # if occupancy > capacity then writer is blocked
 # the slowest reader is the lowest reader_seq 
 #
-
-              from prometheus_client import Counter, Histogram, Gauge
+from prometheus_client import Counter, Histogram, Gauge
 import time
 
 # 1. Define Metrics
