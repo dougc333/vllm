@@ -1,0 +1,30 @@
+ninja_required_version = 1.3
+cxx = c++
+
+cflags = -DTORCH_EXTENSION_NAME=humming_launcher -DTORCH_API_INCLUDE_EXTENSION_H -I/home/ubuntu/.venv312/lib/python3.12/site-packages/nvidia/cu13/include -I/home/ubuntu/.venv312/lib/python3.12/site-packages/nvidia/cu13/include/cccl -isystem /home/ubuntu/.venv312/lib/python3.12/site-packages/torch/include -isystem /home/ubuntu/.venv312/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -isystem /home/ubuntu/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/include/python3.12 -fPIC -std=c++20 -O3 -DUSE_TORCH_STABLE_API=1
+post_cflags = 
+cuda_dlink_post_cflags = 
+sycl_dlink_post_cflags = 
+ldflags = -shared -lcuda -lc10_cuda -ltorch_cuda -L/home/ubuntu/.venv312/lib/python3.12/site-packages/torch/lib -lc10 -ltorch_cpu -ltorch -ltorch_python
+
+rule compile
+  command = $cxx -MMD -MF $out.d $cflags -c $in -o $out $post_cflags
+  depfile = $out.d
+  deps = gcc
+
+
+
+
+
+rule link
+  command = $cxx $in $ldflags -o $out
+
+build launcher.o: compile /home/ubuntu/.venv312/lib/python3.12/site-packages/humming/csrc/launcher/launcher.cpp
+
+
+
+
+
+build humming_launcher.so: link launcher.o
+
+default humming_launcher.so

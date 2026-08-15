@@ -1,0 +1,596 @@
+(.venv312) ubuntu@regular-pine-lemur:~$ ./run-benchmark.sh 2>&1 | tee benchmark-h100.log
+SERVER: vllm serve Qwen/Qwen3-4B --dtype bfloat16 --max-model-len 16384 --gpu-memory-utilization 0.9 --max-num-seqs 64 --max-num-batched-tokens 32768 --port 8000
+KV CACHE CAPACITY: 439,552 tokens
+KV CACHE MAX CONCURRENCY: 26.83x at 16,384 tokens/request
+BATCH LIMITS: max_num_seqs=64, max_num_batched_tokens=32768, client_max_concurrency=64
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-4B --dataset-name random --random-input-len 3000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 1.157 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-4b --result-filename in3000-out300-rps1.157.json --metadata gpu=A100-80GB target_input_tokens=3000 target_output_tokens=300 offered_rps=1.157
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x7544815ae700>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=3000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-4B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=1.157, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=3000', 'target_output_tokens=300', 'offered_rps=1.157'], result_dir='results_h100/qwen-qwen3-4b', result_filename='in3000-out300-rps1.157.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-44337b49-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:05:14 [utils.py:90] Sampling input_len from [3000, 3000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 1.157
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [02:55<00:00,  1.14it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           1.16
+Benchmark duration (s):                  175.19
+Total input tokens:                      600000
+Total generated tokens:                  60000
+Request throughput (req/s):              1.14
+Output token throughput (tok/s):         342.48
+Peak output token throughput (tok/s):    983.00
+Peak concurrent requests:                12.00
+Total token throughput (tok/s):          3767.32
+---------------Time to First Token----------------
+Mean TTFT (ms):                          89.63
+Median TTFT (ms):                        87.36
+P50 TTFT (ms):                           87.36
+P95 TTFT (ms):                           114.65
+P99 TTFT (ms):                           144.50
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          7.83
+Median TPOT (ms):                        7.70
+P50 TPOT (ms):                           7.70
+P95 TPOT (ms):                           9.45
+P99 TPOT (ms):                           9.85
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           7.83
+Median ITL (ms):                         7.22
+P50 ITL (ms):                            7.22
+P95 ITL (ms):                            8.76
+P99 ITL (ms):                            13.95
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          2431.40
+Median E2EL (ms):                        2390.19
+P50 E2EL (ms):                           2390.19
+P95 E2EL (ms):                           2915.45
+P99 E2EL (ms):                           3057.78
+==================================================
+OBSERVED: peak_running_requests=9, mean_running_requests=2.5, peak_waiting_requests=0, peak_kv_cache_usage=6.5%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-4B --dataset-name random --random-input-len 3000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 10.0 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-4b --result-filename in3000-out300-rps10.json --metadata gpu=A100-80GB target_input_tokens=3000 target_output_tokens=300 offered_rps=10.0
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x71569dfdd4e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=3000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-4B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=10.0, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=3000', 'target_output_tokens=300', 'offered_rps=10.0'], result_dir='results_h100/qwen-qwen3-4b', result_filename='in3000-out300-rps10.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-a92d386f-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:08:22 [utils.py:90] Sampling input_len from [3000, 3000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 10.0
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [00:35<00:00,  5.63it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           10.00
+Benchmark duration (s):                  35.51
+Total input tokens:                      600000
+Total generated tokens:                  60000
+Request throughput (req/s):              5.63
+Output token throughput (tok/s):         1689.47
+Peak output token throughput (tok/s):    2823.00
+Peak concurrent requests:                78.00
+Total token throughput (tok/s):          18584.19
+---------------Time to First Token----------------
+Mean TTFT (ms):                          249.66
+Median TTFT (ms):                        196.18
+P50 TTFT (ms):                           196.18
+P95 TTFT (ms):                           518.21
+P99 TTFT (ms):                           575.45
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          31.74
+Median TPOT (ms):                        34.17
+P50 TPOT (ms):                           34.17
+P95 TPOT (ms):                           35.47
+P99 TPOT (ms):                           35.50
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           31.74
+Median ITL (ms):                         22.23
+P50 ITL (ms):                            22.23
+P95 ITL (ms):                            88.83
+P99 ITL (ms):                            157.51
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          9740.13
+Median E2EL (ms):                        10551.54
+P50 E2EL (ms):                           10551.54
+P95 E2EL (ms):                           10741.22
+P99 E2EL (ms):                           10757.11
+==================================================
+OBSERVED: peak_running_requests=64, mean_running_requests=40.1, peak_waiting_requests=0, peak_kv_cache_usage=46.7%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-4B --dataset-name random --random-input-len 8000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 1.157 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-4b --result-filename in8000-out300-rps1.157.json --metadata gpu=A100-80GB target_input_tokens=8000 target_output_tokens=300 offered_rps=1.157
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x7885cffd9440>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=8000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-4B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=1.157, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=8000', 'target_output_tokens=300', 'offered_rps=1.157'], result_dir='results_h100/qwen-qwen3-4b', result_filename='in8000-out300-rps1.157.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-dadd16f1-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:09:10 [utils.py:90] Sampling input_len from [8000, 8000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 1.157
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [02:56<00:00,  1.14it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           1.16
+Benchmark duration (s):                  176.11
+Total input tokens:                      1600000
+Total generated tokens:                  60000
+Request throughput (req/s):              1.14
+Output token throughput (tok/s):         340.69
+Peak output token throughput (tok/s):    924.00
+Peak concurrent requests:                18.00
+Total token throughput (tok/s):          9425.84
+---------------Time to First Token----------------
+Mean TTFT (ms):                          280.17
+Median TTFT (ms):                        243.89
+P50 TTFT (ms):                           243.89
+P95 TTFT (ms):                           439.56
+P99 TTFT (ms):                           682.78
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          13.63
+Median TPOT (ms):                        12.69
+P50 TPOT (ms):                           12.69
+P95 TPOT (ms):                           21.38
+P99 TPOT (ms):                           22.77
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           13.63
+Median ITL (ms):                         10.13
+P50 ITL (ms):                            10.13
+P95 ITL (ms):                            17.32
+P99 ITL (ms):                            200.68
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          4354.44
+Median E2EL (ms):                        4087.31
+P50 E2EL (ms):                           4087.31
+P95 E2EL (ms):                           6739.81
+P99 E2EL (ms):                           7128.39
+==================================================
+OBSERVED: peak_running_requests=16, mean_running_requests=4.4, peak_waiting_requests=0, peak_kv_cache_usage=29.8%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-4B --dataset-name random --random-input-len 8000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 10.0 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-4b --result-filename in8000-out300-rps10.json --metadata gpu=A100-80GB target_input_tokens=8000 target_output_tokens=300 offered_rps=10.0
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x70c4037cd4e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=8000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-4B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=10.0, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=8000', 'target_output_tokens=300', 'offered_rps=10.0'], result_dir='results_h100/qwen-qwen3-4b', result_filename='in8000-out300-rps10.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-68954061-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:12:23 [utils.py:90] Sampling input_len from [8000, 8000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 10.0
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [01:26<00:00,  2.30it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           10.00
+Benchmark duration (s):                  87.00
+Total input tokens:                      1600000
+Total generated tokens:                  60000
+Request throughput (req/s):              2.30
+Output token throughput (tok/s):         689.66
+Peak output token throughput (tok/s):    1350.00
+Peak concurrent requests:                72.00
+Total token throughput (tok/s):          19080.62
+---------------Time to First Token----------------
+Mean TTFT (ms):                          5440.22
+Median TTFT (ms):                        3662.65
+P50 TTFT (ms):                           3662.65
+P95 TTFT (ms):                           16270.83
+P99 TTFT (ms):                           19149.27
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          66.67
+Median TPOT (ms):                        71.15
+P50 TPOT (ms):                           71.15
+P95 TPOT (ms):                           74.43
+P99 TPOT (ms):                           81.52
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           66.67
+Median ITL (ms):                         40.57
+P50 ITL (ms):                            40.57
+P95 ITL (ms):                            42.38
+P99 ITL (ms):                            859.29
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          25374.56
+Median E2EL (ms):                        24896.31
+P50 E2EL (ms):                           24896.31
+P95 E2EL (ms):                           38352.81
+P99 E2EL (ms):                           41146.41
+==================================================
+OBSERVED: peak_running_requests=54, mean_running_requests=39.6, peak_waiting_requests=22, peak_kv_cache_usage=100.0%
+SERVER: vllm serve Qwen/Qwen3-8B --dtype bfloat16 --max-model-len 16384 --gpu-memory-utilization 0.9 --max-num-seqs 64 --max-num-batched-tokens 32768 --port 8000
+KV CACHE CAPACITY: 375,440 tokens
+KV CACHE MAX CONCURRENCY: 22.92x at 16,384 tokens/request
+BATCH LIMITS: max_num_seqs=64, max_num_batched_tokens=32768, client_max_concurrency=64
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-8B --dataset-name random --random-input-len 3000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 1.157 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-8b --result-filename in3000-out300-rps1.157.json --metadata gpu=A100-80GB target_input_tokens=3000 target_output_tokens=300 offered_rps=1.157
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x7112fe3d14e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=3000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-8B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=1.157, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=3000', 'target_output_tokens=300', 'offered_rps=1.157'], result_dir='results_h100/qwen-qwen3-8b', result_filename='in3000-out300-rps1.157.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-728caf6f-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:15:45 [utils.py:90] Sampling input_len from [3000, 3000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 1.157
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [02:56<00:00,  1.13it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           1.16
+Benchmark duration (s):                  176.41
+Total input tokens:                      600000
+Total generated tokens:                  60000
+Request throughput (req/s):              1.13
+Output token throughput (tok/s):         340.13
+Peak output token throughput (tok/s):    878.00
+Peak concurrent requests:                15.00
+Total token throughput (tok/s):          3741.38
+---------------Time to First Token----------------
+Mean TTFT (ms):                          150.31
+Median TTFT (ms):                        141.76
+P50 TTFT (ms):                           141.76
+P95 TTFT (ms):                           223.29
+P99 TTFT (ms):                           250.83
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          13.06
+Median TPOT (ms):                        12.80
+P50 TPOT (ms):                           12.80
+P95 TPOT (ms):                           15.72
+P99 TPOT (ms):                           16.64
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           13.06
+Median ITL (ms):                         11.57
+P50 ITL (ms):                            11.57
+P95 ITL (ms):                            13.28
+P99 ITL (ms):                            109.72
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          4054.95
+Median E2EL (ms):                        3994.22
+P50 E2EL (ms):                           3994.22
+P95 E2EL (ms):                           4845.09
+P99 E2EL (ms):                           5140.49
+==================================================
+OBSERVED: peak_running_requests=14, mean_running_requests=4.3, peak_waiting_requests=0, peak_kv_cache_usage=12.0%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-8B --dataset-name random --random-input-len 3000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 10.0 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-8b --result-filename in3000-out300-rps10.json --metadata gpu=A100-80GB target_input_tokens=3000 target_output_tokens=300 offered_rps=10.0
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x7f899ebdd440>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=3000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-8B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=10.0, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=3000', 'target_output_tokens=300', 'offered_rps=10.0'], result_dir='results_h100/qwen-qwen3-8b', result_filename='in3000-out300-rps10.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-a8bded46-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:18:54 [utils.py:90] Sampling input_len from [3000, 3000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 10.0
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [00:49<00:00,  4.07it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           10.00
+Benchmark duration (s):                  49.14
+Total input tokens:                      600000
+Total generated tokens:                  60000
+Request throughput (req/s):              4.07
+Output token throughput (tok/s):         1220.99
+Peak output token throughput (tok/s):    2496.00
+Peak concurrent requests:                86.00
+Total token throughput (tok/s):          13430.86
+---------------Time to First Token----------------
+Mean TTFT (ms):                          1110.65
+Median TTFT (ms):                        716.79
+P50 TTFT (ms):                           716.79
+P95 TTFT (ms):                           2854.17
+P99 TTFT (ms):                           3084.83
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          41.95
+Median TPOT (ms):                        44.00
+P50 TPOT (ms):                           44.00
+P95 TPOT (ms):                           48.67
+P99 TPOT (ms):                           49.02
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           41.95
+Median ITL (ms):                         26.23
+P50 ITL (ms):                            26.23
+P95 ITL (ms):                            132.55
+P99 ITL (ms):                            353.33
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          13653.30
+Median E2EL (ms):                        14433.35
+P50 E2EL (ms):                           14433.35
+P95 E2EL (ms):                           14854.16
+P99 E2EL (ms):                           15966.42
+==================================================
+OBSERVED: peak_running_requests=64, mean_running_requests=42.3, peak_waiting_requests=3, peak_kv_cache_usage=55.5%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-8B --dataset-name random --random-input-len 8000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 1.157 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-8b --result-filename in8000-out300-rps1.157.json --metadata gpu=A100-80GB target_input_tokens=8000 target_output_tokens=300 offered_rps=1.157
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x753b33bd1440>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=8000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-8B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=1.157, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=8000', 'target_output_tokens=300', 'offered_rps=1.157'], result_dir='results_h100/qwen-qwen3-8b', result_filename='in8000-out300-rps1.157.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-8d9ca521-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:19:55 [utils.py:90] Sampling input_len from [8000, 8000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 1.157
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [02:58<00:00,  1.12it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           1.16
+Benchmark duration (s):                  178.26
+Total input tokens:                      1600000
+Total generated tokens:                  60000
+Request throughput (req/s):              1.12
+Output token throughput (tok/s):         336.59
+Peak output token throughput (tok/s):    886.00
+Peak concurrent requests:                29.00
+Total token throughput (tok/s):          9312.46
+---------------Time to First Token----------------
+Mean TTFT (ms):                          513.58
+Median TTFT (ms):                        393.45
+P50 TTFT (ms):                           393.45
+P95 TTFT (ms):                           1122.49
+P99 TTFT (ms):                           1290.23
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          27.87
+Median TPOT (ms):                        26.70
+P50 TPOT (ms):                           26.70
+P95 TPOT (ms):                           43.52
+P99 TPOT (ms):                           50.74
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           27.87
+Median ITL (ms):                         16.93
+P50 ITL (ms):                            16.93
+P95 ITL (ms):                            26.93
+P99 ITL (ms):                            340.21
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          8846.41
+Median E2EL (ms):                        8416.25
+P50 E2EL (ms):                           8416.25
+P95 E2EL (ms):                           13601.37
+P99 E2EL (ms):                           15877.32
+==================================================
+OBSERVED: peak_running_requests=29, mean_running_requests=8.9, peak_waiting_requests=0, peak_kv_cache_usage=63.2%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-8B --dataset-name random --random-input-len 8000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 10.0 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-8b --result-filename in8000-out300-rps10.json --metadata gpu=A100-80GB target_input_tokens=8000 target_output_tokens=300 offered_rps=10.0
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x7f65a17e94e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=8000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-8B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=10.0, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=8000', 'target_output_tokens=300', 'offered_rps=10.0'], result_dir='results_h100/qwen-qwen3-8b', result_filename='in8000-out300-rps10.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-bdbe71b3-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:23:12 [utils.py:90] Sampling input_len from [8000, 8000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 10.0
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [02:00<00:00,  1.66it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           10.00
+Benchmark duration (s):                  120.20
+Total input tokens:                      1600000
+Total generated tokens:                  60000
+Request throughput (req/s):              1.66
+Output token throughput (tok/s):         499.17
+Peak output token throughput (tok/s):    1196.00
+Peak concurrent requests:                71.00
+Total token throughput (tok/s):          13810.46
+---------------Time to First Token----------------
+Mean TTFT (ms):                          12596.33
+Median TTFT (ms):                        9514.55
+P50 TTFT (ms):                           9514.55
+P95 TTFT (ms):                           24250.92
+P99 TTFT (ms):                           26564.17
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          75.95
+Median TPOT (ms):                        80.40
+P50 TPOT (ms):                           80.40
+P95 TPOT (ms):                           86.06
+P99 TPOT (ms):                           105.39
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           75.95
+Median ITL (ms):                         39.29
+P50 ITL (ms):                            39.29
+P95 ITL (ms):                            39.99
+P99 ITL (ms):                            1374.53
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          35304.79
+Median E2EL (ms):                        32321.03
+P50 E2EL (ms):                           32321.03
+P95 E2EL (ms):                           49115.22
+P99 E2EL (ms):                           50621.55
+==================================================
+OBSERVED: peak_running_requests=46, mean_running_requests=34.4, peak_waiting_requests=36, peak_kv_cache_usage=100.0%
+SERVER: vllm serve Qwen/Qwen3-14B --dtype bfloat16 --max-model-len 16384 --gpu-memory-utilization 0.9 --max-num-seqs 64 --max-num-batched-tokens 32768 --port 8000
+KV CACHE CAPACITY: 248,352 tokens
+KV CACHE MAX CONCURRENCY: 15.16x at 16,384 tokens/request
+BATCH LIMITS: max_num_seqs=64, max_num_batched_tokens=32768, client_max_concurrency=64
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-14B --dataset-name random --random-input-len 3000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 1.157 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-14b --result-filename in3000-out300-rps1.157.json --metadata gpu=A100-80GB target_input_tokens=3000 target_output_tokens=300 offered_rps=1.157
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x726a667d94e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=3000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-14B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=1.157, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=3000', 'target_output_tokens=300', 'offered_rps=1.157'], result_dir='results_h100/qwen-qwen3-14b', result_filename='in3000-out300-rps1.157.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-0b06088e-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:27:32 [utils.py:90] Sampling input_len from [3000, 3000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 1.157
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [02:59<00:00,  1.12it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           1.16
+Benchmark duration (s):                  179.04
+Total input tokens:                      600000
+Total generated tokens:                  60000
+Request throughput (req/s):              1.12
+Output token throughput (tok/s):         335.12
+Peak output token throughput (tok/s):    792.00
+Peak concurrent requests:                22.00
+Total token throughput (tok/s):          3686.28
+---------------Time to First Token----------------
+Mean TTFT (ms):                          297.71
+Median TTFT (ms):                        252.81
+P50 TTFT (ms):                           252.81
+P95 TTFT (ms):                           466.27
+P99 TTFT (ms):                           702.75
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          26.14
+Median TPOT (ms):                        26.04
+P50 TPOT (ms):                           26.04
+P95 TPOT (ms):                           31.22
+P99 TPOT (ms):                           32.94
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           26.14
+Median ITL (ms):                         20.46
+P50 ITL (ms):                            20.46
+P95 ITL (ms):                            22.93
+P99 ITL (ms):                            208.73
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          8113.03
+Median E2EL (ms):                        8051.16
+P50 E2EL (ms):                           8051.16
+P95 E2EL (ms):                           9785.68
+P99 E2EL (ms):                           10364.98
+==================================================
+OBSERVED: peak_running_requests=20, mean_running_requests=8.4, peak_waiting_requests=0, peak_kv_cache_usage=25.8%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-14B --dataset-name random --random-input-len 3000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 10.0 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-14b --result-filename in3000-out300-rps10.json --metadata gpu=A100-80GB target_input_tokens=3000 target_output_tokens=300 offered_rps=10.0
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x7c9b6c5e94e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=3000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-14B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=10.0, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=3000', 'target_output_tokens=300', 'offered_rps=10.0'], result_dir='results_h100/qwen-qwen3-14b', result_filename='in3000-out300-rps10.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-17e3bc31-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:30:43 [utils.py:90] Sampling input_len from [3000, 3000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 10.0
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [01:18<00:00,  2.54it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           10.00
+Benchmark duration (s):                  78.61
+Total input tokens:                      600000
+Total generated tokens:                  60000
+Request throughput (req/s):              2.54
+Output token throughput (tok/s):         763.26
+Peak output token throughput (tok/s):    1856.00
+Peak concurrent requests:                86.00
+Total token throughput (tok/s):          8395.83
+---------------Time to First Token----------------
+Mean TTFT (ms):                          4168.12
+Median TTFT (ms):                        4050.69
+P50 TTFT (ms):                           4050.69
+P95 TTFT (ms):                           7172.03
+P99 TTFT (ms):                           7388.56
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          60.70
+Median TPOT (ms):                        63.19
+P50 TPOT (ms):                           63.19
+P95 TPOT (ms):                           75.88
+P99 TPOT (ms):                           77.36
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           60.70
+Median ITL (ms):                         35.68
+P50 ITL (ms):                            35.68
+P95 ITL (ms):                            36.67
+P99 ITL (ms):                            1041.62
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          22316.09
+Median E2EL (ms):                        23585.85
+P50 E2EL (ms):                           23585.85
+P95 E2EL (ms):                           25661.32
+P99 E2EL (ms):                           25673.17
+==================================================
+OBSERVED: peak_running_requests=64, mean_running_requests=43.7, peak_waiting_requests=21, peak_kv_cache_usage=84.9%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-14B --dataset-name random --random-input-len 8000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 1.157 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-14b --result-filename in8000-out300-rps1.157.json --metadata gpu=A100-80GB target_input_tokens=8000 target_output_tokens=300 offered_rps=1.157
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x79b1177d5440>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=8000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-14B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=1.157, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=8000', 'target_output_tokens=300', 'offered_rps=1.157'], result_dir='results_h100/qwen-qwen3-14b', result_filename='in8000-out300-rps1.157.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-369a4b90-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:32:14 [utils.py:90] Sampling input_len from [8000, 8000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 1.157
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+100%|██████████| 200/200 [03:23<00:00,  1.02s/it]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200
+Failed requests:                         0
+Maximum request concurrency:             64
+Request rate configured (RPS):           1.16
+Benchmark duration (s):                  203.09
+Total input tokens:                      1600000
+Total generated tokens:                  60000
+Request throughput (req/s):              0.98
+Output token throughput (tok/s):         295.44
+Peak output token throughput (tok/s):    780.00
+Peak concurrent requests:                54.00
+Total token throughput (tok/s):          8173.91
+---------------Time to First Token----------------
+Mean TTFT (ms):                          11453.11
+Median TTFT (ms):                        14374.88
+P50 TTFT (ms):                           14374.88
+P95 TTFT (ms):                           20031.94
+P99 TTFT (ms):                           20773.82
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          85.81
+Median TPOT (ms):                        93.24
+P50 TPOT (ms):                           93.24
+P95 TPOT (ms):                           95.16
+P99 TPOT (ms):                           95.17
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           85.81
+Median ITL (ms):                         39.74
+P50 ITL (ms):                            39.74
+P95 ITL (ms):                            609.43
+P99 ITL (ms):                            625.68
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          37108.92
+Median E2EL (ms):                        39894.35
+P50 E2EL (ms):                           39894.35
+P95 E2EL (ms):                           47294.20
+P99 E2EL (ms):                           48970.02
+==================================================
+OBSERVED: peak_running_requests=30, mean_running_requests=23.9, peak_waiting_requests=23, peak_kv_cache_usage=99.1%
+BENCH: vllm bench serve --backend vllm --base-url http://127.0.0.1:8000 --endpoint /v1/completions --model Qwen/Qwen3-14B --dataset-name random --random-input-len 8000 --random-output-len 300 --random-range-ratio 0.0 --request-rate 10.0 --num-prompts 200 --max-concurrency 64 --ignore-eos --percentile-metrics ttft,tpot,itl,e2el --metric-percentiles 50,95,99 --save-result --save-detailed --result-dir results_h100/qwen-qwen3-14b --result-filename in8000-out300-rps10.json --metadata gpu=A100-80GB target_input_tokens=8000 target_output_tokens=300 offered_rps=10.0
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Namespace(subparser='bench', bench_type='serve', dispatch_function=<function BenchmarkServingSubcommand.cmd at 0x73f5c9bf14e0>, trust_remote_code=False, seed=0, num_prompts=200, dataset_name='random', no_stream=False, dataset_path=None, no_oversample=False, skip_chat_template=False, enable_multimodal_chat=False, disable_shuffle=False, custom_output_len=256, custom_ensure_client_side_data=False, spec_bench_output_len=256, spec_bench_category=None, sonnet_input_len=550, sonnet_output_len=150, sonnet_prefix_len=200, sharegpt_output_len=None, timed_trace_chunk_hash_size=16, timed_trace_sec_multiplier=1, timed_trace_label_timestamp='timestamp', timed_trace_label_input_length='input_length', timed_trace_label_output_length='output_length', timed_trace_label_hash_ids='hash_ids', blazedit_min_distance=0.0, blazedit_max_distance=1.0, asr_max_audio_len_sec=inf, asr_min_audio_len_sec=0.0, random_input_len=8000, random_output_len=300, random_range_ratio='0.0', random_prefix_len=0, random_batch_size=1, no_reranker=False, random_mm_base_items_per_request=1, random_mm_num_mm_items_range_ratio=0.0, random_mm_limit_mm_per_prompt={'image': 255, 'video': 1}, random_mm_bucket_config={(256, 256, 1): 0.5, (720, 1280, 1): 0.5, (720, 1280, 16): 0.0}, hf_subset=None, hf_split=None, hf_name=None, hf_output_len=None, bfcl_categories=None, prefix_repetition_prefix_len=256, prefix_repetition_suffix_len=256, prefix_repetition_num_prefixes=10, prefix_repetition_output_len=128, speed_bench_dataset_subset='qualitative', speed_bench_output_len=4096, speed_bench_category=None, label=None, backend='vllm', base_url='http://127.0.0.1:8000', host='127.0.0.1', port=8000, endpoint='/v1/completions', header=None, max_concurrency=64, model='Qwen/Qwen3-14B', input_len=None, output_len=None, tokenizer=None, tokenizer_mode='auto', use_beam_search=False, logprobs=None, request_rate=10.0, burstiness=1.0, probe_request_rate=0.0, disable_tqdm=False, num_warmups=0, profile=False, save_result=True, save_detailed=True, append_result=False, metadata=['gpu=A100-80GB', 'target_input_tokens=8000', 'target_output_tokens=300', 'offered_rps=10.0'], result_dir='results_h100/qwen-qwen3-14b', result_filename='in8000-out300-rps10.json', ignore_eos=True, self_timed=None, percentile_metrics='ttft,tpot,itl,e2el', metric_percentiles='50,95,99', goodput=None, request_id_prefix='bench-2789c8af-', top_p=None, top_k=None, min_p=None, temperature=None, frequency_penalty=None, presence_penalty=None, repetition_penalty=None, served_model_name=None, lora_modules=None, lora_assignment='random', ramp_up_strategy=None, ramp_up_start_rps=None, ramp_up_end_rps=None, ready_check_timeout_sec=0, chat_template_kwargs=None, extra_body=None, skip_tokenizer_init=False, insecure=False, plot_timeline=False, timeline_itl_thresholds='25,50', plot_dataset_stats=False)
+INFO 08-15 09:35:54 [utils.py:90] Sampling input_len from [8000, 8000] and output_len from [300, 300]
+WARNING: vllm bench serve no longer sets temperature==0 (greedy) in requests by default. The default will be determined on the server side and can be model/API specific. For the old behavior, include --temperature=0.
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: 10.0
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 64
+ 55%|█████▌    | 110/200 [02:06<01:08,  1.31it/s]
